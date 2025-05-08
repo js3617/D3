@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- D3.js 라이브러리 로드 -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style type="text/css">
+        /* 막대에 마우스를 올리면 색상 변경 */
+        rect:hover {
+            fill: orange;
+        }
+
+        /* 툴팁 기본 스타일 */
+        #tooltip {
+            position: absolute;
+            width: 200px;
+            padding: 10px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+            pointer-events: none; /* 마우스 이벤트 무시 */
+        }
+
+        /* 툴팁 숨김 처리 클래스 */
+        #tooltip.hidden {
+            display: none;
+        }
+
+        #tooltip p {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- 툴팁 HTML 요소 -->
+    <div id="tooltip" class="hidden">
+        <p><strong>Important Label Heading</strong></p>
+        <p><span id="value">100</span>%</p>
+    </div>
+
+    <script type="text/javascript">
+
+        // SVG의 너비와 높이
+        var w = 600;
+        var h = 250;
+
+        // 시각화할 데이터 배열
+        var dataset = [5, 10, 13, 19, 21, 25, 22, 18, 15, 13,
+						11, 12, 15, 20, 18, 17, 16, 18, 23, 25];
+
+        // SVG 요소 생성
+        var svg = d3.select("body")
+            .append("svg")
+            .attr("width", w)
+            .attr("height", h);
+
+        //이후 코드 작성
+
+    </script>
+</body>
+</html>

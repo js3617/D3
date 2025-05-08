@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <script src="https://d3js.org/d3.v7.min.js"></script>
+        <style>
+            /* 선 스타일 정의 */
+            .line {
+                fill: none;
+                stroke: steelblue;
+                opacity: 0.5;
+            }
+
+            /* 축 스타일 정의 */
+            .axis {
+                font: 12px sans-serif;
+            }
+
+            /* 마우스 오버 시 강조 */
+            .foreground path:hover {
+                stroke: red;
+                stroke-width: 2;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- 시각화 결과를 출력할 SVG 요소 -->
+        <svg width="960" height="500"></svg>
+
+        <script>
+            // SVG 내부 여백 및 크기 설정
+            const margin = {
+                    top: 30,
+                    right: 10,
+                    bottom: 10,
+                    left: 0
+                },
+                width = 960 - margin.left - margin.right,
+                height = 500 - margin.top - margin.bottom;
+
+            // SVG 그룹 요소 생성 및 위치 조정
+            const svg = d3
+                .select("svg")
+                .append("g")
+                .attr("transform", `translate(${margin.left},${margin.top})`);
+
+            // CSV 데이터 로드
+            d3.csv("iris_sample.csv").then(function (data) {
+                // 시각화할 변수 목록 정의
+                const dimensions = ["sepal_length", "sepal_width", "petal_length", "petal_width"];
+
+                //이후 코드 작성
+            });
+        </script>
+    </body>
+</html>

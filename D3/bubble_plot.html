@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- D3.js v7 로드 -->
+        <script src="https://d3js.org/d3.v7.min.js"></script>
+        <style>
+            /* 툴팁 스타일 정의 */
+            .tooltip {
+                position: absolute;
+                background-color: white;
+                padding: 8px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                pointer-events: none;
+                font-size: 12px;
+                box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+            }
+        </style>
+    </head>
+    <body>
+        <!-- 툴팁 요소 (초기에는 숨김 처리) -->
+        <div id="tooltip" class="tooltip" style="display: none;"></div>
+
+        <!-- 시각화를 위한 SVG 요소 -->
+        <svg width="800" height="500"></svg>
+
+        <script>
+            // SVG 선택 및 크기 변수 설정
+            const svg = d3.select("svg");
+            const width = +svg.attr("width");
+            const height = +svg.attr("height");
+
+            // 툴팁 선택
+            const tooltip = d3.select("#tooltip");
+
+            // CSV 파일 로드
+            d3.csv("bubble_plot_data.csv").then(data => {
+
+                    // 문자열 데이터를 숫자형으로 변환
+                    data.forEach(d => {
+                        d.gdpPercap = +d.gdpPercap; // GDP per capita
+                        d.lifeExp = +d.lifeExp; // Life Expectancy
+                        d.pop = +d.pop; // Population
+                    });
+
+                    //이후 코드 작성
+            });
+        </script>
+    </body>
+</html>
