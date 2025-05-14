@@ -43,8 +43,75 @@
                         d.pop = +d.pop; // Population
                     });
 
-                    //이후 코드 작성
-            });
+                    // X축 스케일 정의: GDP per capita(1인당 GDP)를 기준으로 좌우 위치를 결정
+                    const x = d3
+                        .scaleLinear() // 입력 값이 증가하면 출력 값도 선형적으로 증가
+                        .domain([0, d3.max(data, d => d.gdpPercap)]) // 입력 데이터의 범위 [최솟값, 최댓값]
+                        .range([50, width - 50]); // 화면상의 출력 위치 범위
+
+                    // Y축 스케일 정의: 기대 수명(lifeExp)에 따라 위아래 위치를 결정
+                    const y = d3
+                        .scaleLinear()
+                        .domain([0, d3.max(data, d => d.lifeExp)])
+                        .range([height - 50, 50]); // SVG 좌표계 상 y값은 아래로 커짐
+
+                    // 반지름 스케일 정의: 인구(pop)에 비례하여 원의 크기(r) 결정
+                    const z = d3
+                        .scaleSqrt() // 제곱근 스케일 (넓이에 비례한 시각적 크기 표현)
+                        .domain([0, d3.max(data, d => d.pop)]) // 인구 수의 최대값 기준
+                        .range([3, 40]); // 원의 반지름을 3px(작은 원)부터 40px(큰 원)까지 설정
+
+                    // 색상 스케일 정의: continent(대륙)별로 원의 색상을 구분
+                    const color = d3.scaleOrdinal(d3.schemeTableau10); // scaleOrdinal: 범주형 스케일 (카테고리 구분에 사용)
+
+                    // X축 생성 및 위치 설정
+                    svg
+                        .append("g")
+                        .attr("transform", `translate(0,${height - 50})`)
+                        .call(d3.axisBottom(x));
+
+                    // Y축 생성 및 위치 설정
+                    svg
+                        .append("g")
+                        .attr("transform", `translate(50,0)`)
+                        .call(d3.axisLeft(y));
+
+                    // 원(버블) 그리기
+                    svg
+                        .append("g")
+                        .selectAll("circle")
+                        .data(data)
+                        .join("circle")
+                        .attr("cx", d => x(d.gdpPercap)) // 각 원의 X 좌표 설정 (GDP per capita)
+                        .attr("cy", d => y(d.lifeExp)) // 각 원의 Y 좌표 설정 (Life Expectancy)
+                        .attr("r", d => z(d.pop)) // 반지름: 인구 수
+                        .style("fill", d => color(d.continent)) // 각 원의 색상 설정 (대륙에 따라 구분)
+                        .style("opacity", 0.7) // 투명도
+                        .attr("stroke", "white") // 테두리 색
+
+                        // 마우스 오버 이벤트: 툴팁 표시
+                        .on("mouseover", function (event, d) {
+                            tooltip
+                                .style("display", "block")
+                                .html(
+                                    `<strong>${d.country}</strong><br>
+                                    GDP: ${d.gdpPercap}<br>
+                                    LifeExp: ${d.lifeExp}<br>
+                                    Population: ${d.pop}<br>
+                                    Continent: ${d.continent}`
+                                );
+                        })
+                        // 마우스 이동 중: 툴팁 위치 갱신
+                        .on("mousemove", function (event) {
+                            tooltip
+                                .style("left", (event.pageX + 10) + "px")
+                                .style("top", (event.pageY - 28) + "px");
+                        })
+                        // 마우스 아웃: 툴팁 숨김
+                        .on("mouseout", function () {
+                            tooltip.style("display", "none");
+                        });
+                });
         </script>
     </body>
 </html>

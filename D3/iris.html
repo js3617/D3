@@ -49,7 +49,54 @@
                 // 시각화할 변수 목록 정의
                 const dimensions = ["sepal_length", "sepal_width", "petal_length", "petal_width"];
 
-                //이후 코드 작성
+                // 각 변수에 대해 Y축 스케일 설정
+                const y = {};
+                dimensions.forEach(dim => {
+                    y[dim] = d3
+                        .scaleLinear()
+                        .domain(d3.extent(data, d => +d[dim])) // 데이터 범위
+                        .range([height, 0]); // 화면 좌표계 상의 위치
+                });
+
+                // X축 스케일 설정 (변수 간 위치 지정)
+                const x = d3
+                    .scalePoint()
+                    .range([0, width])
+                    .padding(1)
+                    .domain(dimensions);
+
+                // 각 데이터에 대해 선을 그리는 함수 정의
+                function path(d) {
+                    return d3.line()(dimensions.map(p => [
+                        x(p), y[p](+d[p])
+                    ]));
+                }
+
+                // 모든 데이터에 대해 path 요소를 만들어 시각화
+                svg.append("g")                    // 그룹을 하나 만들고
+                    .attr("class", "foreground")   // 클래스 이름 부여
+                    .selectAll("path")             // 아직 아무것도 없지만 path 대상으로 선택
+                    .data(data)                    // 데이터를 바인딩
+                    .join("path")                  // 데이터 수만큼 path 요소 생성
+                    .attr("class", "line")         // 각 선에 클래스 부여 (CSS 스타일 적용)
+                    .attr("d", path);              // d 속성에 path 함수를 이용한 좌표 경로 부여
+
+                // 각 차원마다 하나씩 y축 그리기
+                svg.selectAll(".dimension")
+                    .data(dimensions)                         // 차원 목록 바인딩
+                    .join("g")                                // 각 차원에 대해 <g> 요소 생성
+                    .attr("class", "dimension")               // 클래스 부여
+                    .attr("transform", d => `translate(${x(d)})`) // 해당 차원의 x좌표로 이동
+                    .each(function(d) {
+                        // 해당 차원에 대해 y축 추가
+                        d3.select(this).call(d3.axisLeft().scale(y[d]));
+                    })
+                    // 각 축에 텍스트 라벨 추가
+                    .append("text")
+                    .style("text-anchor", "middle")       // 가운데 정렬
+                    .attr("y", -9)                         // y 위치 위로 살짝 이동
+                    .text(d => d)                          // 텍스트는 차원 이름
+                    .style("fill", "black");               // 텍스트 색상
             });
         </script>
     </body>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html >
+    <head>
+
+        <script src="https://d3js.org/d3.v7.min.js"></script>
+        <style type="text/css">
+        </style>
+    </head>
+    <body>
+        <script>
+
+			// SVG의 너비와 높이를 변수로 정의
+			var w = 500;
+            var h = 100;
+
+			// 시각화에 사용할 데이터셋 (각 숫자는 원의 반지름)
+            var dataset = [5, 10, 15, 20, 25];
+
+			// SVG 요소 생성 및 설정
+            var svg = d3
+                .select("body")
+                .append("svg")
+                .attr("width", w)
+                .attr("height", h);
+
+			// SVG에 원(circle) 요소 추가
+            var circles = svg
+                .selectAll("circle")
+                .data(dataset)
+                .enter()
+                .append("circle");
+
+            // 각 원의 속성 설정
+            circles
+				// 각 원의 x좌표 설정
+                .attr("cx", function (d, i) {
+					// 원의 x좌표는 인덱스에 따라 50px 간격으로 설정
+					// 예: i = 0 → cx = 25, i = 1 → cx = 75, ...
+                    return (i * 50) + 25;
+                })
+                .attr("cy", h / 2) // 원의 y좌표 설정 (SVG 높이의 절반으로 설정)
+                .attr("r", function (d) {
+					// 데이터 값(d)을 원의 반지름(r)으로 설정
+                    return d;
+                })
+                .attr("fill", "yellow") // 원의 채우기 색상 설정 (노란색)
+                .attr("stroke", "orange") // 원의 테두리 색상 설정 (주황색)
+                .attr("stroke-width", function (d) {
+					// 각 원의 테두리 두께를 반지름의 절반으로 설정
+                    return d / 2;
+                });
+        </script>
+    </body>
+</html>
